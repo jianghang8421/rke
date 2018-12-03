@@ -212,7 +212,8 @@ spec:
                 - ALL
                 add:
                 - NET_BIND_SERVICE
-            runAsUser: 33
+            runAsUser: 0
+            privileged: true
           env:
             - name: POD_NAME
               valueFrom:
