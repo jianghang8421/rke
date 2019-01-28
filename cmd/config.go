@@ -102,9 +102,8 @@ func clusterConfig(ctx *cli.Context) error {
 	if ctx.Bool("system-images") {
 		if ctx.Bool("arm64") {
 			return generateArm64SystemImagesList(ctx.String("version"), ctx.Bool("all"))
-		} else {
-			return generateSystemImagesList(ctx.String("version"), ctx.Bool("all"))
 		}
+		return generateSystemImagesList(ctx.String("version"), ctx.Bool("all"))
 	}
 	configFile := ctx.String("name")
 	print := ctx.Bool("print")

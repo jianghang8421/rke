@@ -1,0 +1,66 @@
+kind: pipeline
+name: amd64
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: build
+    image: rancher/dapper:1.11.2
+    volumes:
+      - name: docker
+        path: /var/run/docker.sock
+    commands:
+      - dapper ci
+  - name: build-all-binaries
+    image: rancher/dapper:1.11.2
+    volumes:
+      - name: docker
+        path: /var/run/docker.sock
+    commands:
+      - CROSS=1 dapper build
+    when:
+      event: tag
+  - name: stage-binaries
+    image: rancher/dapper:1.11.2
+    volumes:
+      - name: docker
+        path: /var/run/docker.sock
+    commands:
+      - cp -r ./bin/* ./package/
+    when:
+      event: tag
+  - name: github_binary_prerelease
+    image: plugins/github-release:linux-amd64
+    settings:
+      prerelease: true
+      api_key:
+        from_secret: github_token
+      files:
+        - build/bin/rke_*
+        - dist/artifacts/${DRONE_TAG}/*
+      checksum:
+        - sha256
+    when:
+      event: tag
+      ref:
+        include: [ refs/tags/*rc* ]
+  - name: github_binary_release
+    image: plugins/github-release:linux-amd64
+    settings:
+      api_key:
+        from_secret: github_token
+      files:
+        - build/bin/rke_*
+        - dist/artifacts/${DRONE_TAG}/*
+      checksum:
+        - sha256
+    when:
+      event: tag
+      ref:
+        exclude: [ refs/tags/*rc* ]
+volumes:
+  - name: docker
+    host:
+      path: /var/run/docker.sock
