@@ -908,4 +908,5 @@ func init() {
 
 	// init Windows versions
 	initWindows()
+	initArm64()
 }
