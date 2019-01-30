@@ -7,14 +7,14 @@ platform:
 
 steps:
   - name: build
-    image: rancher/dapper:1.11.2
+    image: rancher/dapper:v0.4.0
     volumes:
       - name: docker
         path: /var/run/docker.sock
     commands:
       - dapper ci
   - name: build-all-binaries
-    image: rancher/dapper:1.11.2
+    image: rancher/dapper:v0.4.0
     volumes:
       - name: docker
         path: /var/run/docker.sock
@@ -23,7 +23,7 @@ steps:
     when:
       event: tag
   - name: stage-binaries
-    image: rancher/dapper:1.11.2
+    image: rancher/dapper:v0.4.0
     volumes:
       - name: docker
         path: /var/run/docker.sock
