@@ -132,6 +132,8 @@ func IsRancherBackupSupported(image string) bool {
 		return false
 	}
 	return true
+}
+
 // ValidateArm64Version - Return error if version is not valid
 // Is version major.minor >= oldest major.minor supported
 // Is version in the AllArm64K8sVersions list
